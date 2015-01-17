@@ -6,7 +6,8 @@ from cblog.core.const import max_query_size
 from cblog.core.db import DBSession, db_commit
 from cblog.core.exc import PostExc
 from cblog.model import Post
-from xxx import current_user
+from cblog.app.web import tag as tag_base
+# from xxx import current_user
 
 
 def get(post_id, count_pv=False):
@@ -28,12 +29,12 @@ def incre_pv(post_id):
         post.pv += 1
 
 
-def query(category=None, status=None, tag=None, offset=0, limit=20):
+def query(category_id=None, status=None, tag=None, offset=0, limit=20):
     session = DBSession()
     q = session.query(Post)
 
-    if category is not None:
-        q = q.filter(Post.category == category)
+    if category_id is not None:
+        q = q.filter(Post.category_id == category_id)
 
     if status is not None:
         q = q.filter(Post.status == status)
@@ -54,7 +55,7 @@ def query(category=None, status=None, tag=None, offset=0, limit=20):
 def add(title, content, status=Post.STATUS_DRAFT, category_id=-1, tag=''):
     session = DBSession()
     new_post = Post(
-        author_id=current_user.id,
+        author_id=-1,#current_user.id,
         title=title,
         content=content,
         status=status,
@@ -70,13 +71,13 @@ def add(title, content, status=Post.STATUS_DRAFT, category_id=-1, tag=''):
 
 
 @db_commit
-def update(post_id, title, content, status, category):
+def update(post_id, title, content, status, category_id):
     post = get(post_id)
 
     post.title = title
     post.content = content
     post.status = status
-    post.category = category
+    post.category_id = category_id
 
 
 @db_commit
