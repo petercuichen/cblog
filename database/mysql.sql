@@ -10,7 +10,7 @@ CREATE TABLE `post` (
   `category_id` int(11),
   `pv` int(11) DEFAULT 0,
   `status` tinyint(4) NOT NULL,
-  `area` text DEFAULT '',
+  `content` text DEFAULT '',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   INDEX `category_id` (`category_id`),

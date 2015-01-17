@@ -46,11 +46,4 @@ class PostHandler(RequestHandler):
         post_base.update(post_id, title, content, status, category)
 
     def delete(self, post_id):
-        pass
-
-
-routes = [
-    (r"/", IndexHandler),
-    (r'/page/(\d+)', IndexHandler),
-    (r'/post/(\d+)', PostHandler),
-]
+        post_base.delete(post_id)
