@@ -11,4 +11,5 @@ handlers = [
     (r"/", IndexHandler),
     (r'/page/(\d+)', IndexHandler),
     (r'/post/(\d+)', PostHandler),
+    (r'/post/new', PostHandler),
 ]

@@ -71,13 +71,18 @@ def add(title, content, status=Post.STATUS_DRAFT, category_id=-1, tag=''):
 
 
 @db_commit
-def update(post_id, title, content, status, category_id):
+def update(post_id, title=None, content=None, status=None, category_id=None):
+
     post = get(post_id)
 
-    post.title = title
-    post.content = content
-    post.status = status
-    post.category_id = category_id
+    if title is not None:
+        post.title = title
+    if content is not None:
+        post.content = content
+    if status is not None:
+        post.status = status
+    if category_id is not None:
+        post.category_id = category_id
 
 
 @db_commit

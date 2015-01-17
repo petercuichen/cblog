@@ -19,7 +19,13 @@ class IndexHandler(RequestHandler):
             offset=(page_no-1),
             limit=page_size,
         )
-        self.write(posts)
+        results = [{'title': p.title,
+                    'content': p.content,
+                    'pv': p.pv,
+                    'created_at': p.created_at.strftime('%Y-%m-%d')}
+                   for p in posts]
+
+        self.write({'posts': results})
 
 
 class PostHandler(RequestHandler):
@@ -28,7 +34,7 @@ class PostHandler(RequestHandler):
         post = post_base.get(post_id, count_pv=True)
         self.write(post)
 
-    def post(self, post_id):
+    def post(self):
         title = self.get_argument('title', None)
         content = self.get_argument('content', None)
         status = self.get_argument('status', None)
@@ -38,7 +44,7 @@ class PostHandler(RequestHandler):
         post_base.add(title, content, status, category_id, tag)
 
     def put(self, post_id):
-        title = self.get_argument('title')
+        title = self.get_argument('title', None)
         content = self.get_argument('content', None)
         status = self.get_argument('status', None)
         category = self.get_argument('category', None)
