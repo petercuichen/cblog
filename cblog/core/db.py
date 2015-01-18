@@ -3,6 +3,7 @@
 
 from __future__ import absolute_import, division, print_function
 from functools import wraps
+from redis import Redis
 
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
@@ -10,7 +11,9 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from cblog import config
 
-
+########
+# MySQL
+########
 engine = create_engine(
     "mysql+pymysql://{user}:{pwd}@{host}:{port}/{database}?charset=utf8".
     format(**config.MYSQL),
@@ -41,3 +44,10 @@ def db_commit(func):
         return ret
 
     return wrapper
+
+
+########
+# Redis
+########
+redis = Redis(**config.REDIS)
+

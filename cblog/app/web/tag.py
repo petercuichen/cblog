@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, division, print_function
 from cblog.core.db import DBSession, db_commit
-from cblog.model import Tag
+from cblog.models import Tag
 
 
 @db_commit

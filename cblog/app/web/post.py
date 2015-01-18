@@ -5,7 +5,7 @@ from __future__ import absolute_import, division, print_function
 from cblog.core.const import max_query_size
 from cblog.core.db import DBSession, db_commit
 from cblog.core.exc import PostExc
-from cblog.model import Post
+from cblog.models import Post
 from cblog.app.web import tag as tag_base
 # from xxx import current_user
 
