@@ -16,3 +16,6 @@ class BaseExc(Exception):
 class PostExc(BaseExc):
     pass
 
+
+class LoginExc(BaseExc):
+    pass

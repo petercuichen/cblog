@@ -21,6 +21,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    password = Column(String, nullable=False)
     is_admin = Column(SmallInteger, default=0)
     email = Column(String, default='')
     last_login = Column(DateTime, default=datetime.now, onupdate=datetime.now)

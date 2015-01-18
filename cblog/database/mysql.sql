@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(128) NOT NULL,
+  `password` varchar(128) NOT NULL,
   `is_admin` tinyint(4) DEFAULT 0,
   `email` varchar(128),
   `last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
