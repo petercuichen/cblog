@@ -60,3 +60,14 @@ class Tag(Base):
     name = Column(String, nullable=False)
     post_id = Column(Integer, nullable=False)
 
+
+class LoginSession(Base):
+    __tablename__ = 'login_session'
+
+    id = Column(Integer, primary_key=True)
+    use_id = Column(Integer, nullable=False)
+    sso_id = Column(String(48), default='')
+    is_valid = Column(Integer, default=1)
+    last_active = Column(DateTime, default='0000-00-00 00:00:00')
+    created_ip = Column(String(16), default='')
+    created_at = Column(DateTime, default=datetime.now)

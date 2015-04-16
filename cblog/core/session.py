@@ -8,18 +8,19 @@ from uuid import uuid4
 import time
 import logging
 
+from .db import DBSession
+
 
 class RedisSessionStore(object):
-    def __init__(self, redis_connection, **options):
-        self.options = {
-            'key_prefix': 'session',
-            'expire': 7200,
-        }
-        self.options.update(options)
+
+    default_expire = 7 * 24 * 3600
+    default_prefix = 'session'
+
+    def __init__(self, redis_connection):
         self.redis = redis_connection
 
     def prefixed(self, sid):
-        return '%s:%s' % (self.options['key_prefix'], sid)
+        return '%s:%s' % (self.default_prefix, sid)
 
     def generate_sid(self):
         return uuid4().get_hex()
@@ -29,9 +30,8 @@ class RedisSessionStore(object):
         session = pickle.loads(data) if data else dict()
         return session
 
-    def set_session(self, sid, session_data, name, expiry=None):
+    def set_session(self, sid, session_data, name, expiry=default_expire):
         self.redis.hset(self.prefixed(sid), name, pickle.dumps(session_data))
-        expiry = expiry or self.options['expire']
         if expiry:
             self.redis.expire(self.prefixed(sid), expiry)
 
@@ -40,19 +40,20 @@ class RedisSessionStore(object):
 
 
 class Session(object):
-    def __init__(self, session_store, session_id=None, expires_days=None):
-        self._store = session_store
-        self._sid = session_id if session_id else self._store.generate_sid()
+    def __init__(self, session_cache, session_id=None, expires_days=None):
+        self._cache = session_cache
+        self._db = DBSession
+        self._sid = session_id if session_id else self._cache.generate_sid()
         self._dirty = False
         self.set_expires(expires_days)
         try:
-            self._data = self._store.get_session(self._sid, 'data')
+            self._data = self._cache.get_session(self._sid, 'data')
         except:
             logging.error('Can not connect Redis server.')
             self._data = {}
 
     def clear(self):
-        self._store.delete_session(self._sid)
+        self._cache.delete_session(self._sid)
 
     @property
     def id(self):
@@ -60,13 +61,13 @@ class Session(object):
 
     def access(self, remote_ip):
         access_info = {'remote_ip': remote_ip, 'time': '%.6f' % time.time()}
-        self._store.set_session(
+        self._cache.set_session(
             self._sid,
             'last_access',
             pickle.dumps(access_info))
 
     def last_access(self):
-        access_info = self._store.get_session(self._sid, 'last_access')
+        access_info = self._cache.get_session(self._sid, 'last_access')
         return pickle.loads(access_info)
 
     def set_expires(self, days):
@@ -101,5 +102,5 @@ class Session(object):
 
     def save(self):
         if self._dirty:
-            self._store.set_session(self._sid, self._data, 'data', self._expiry)
+            self._cache.set_session(self._sid, self._data, 'data', self._expiry)
             self._dirty = False

@@ -31,12 +31,10 @@ class LoginHandler(BaseHandler):
             self.session['user'] = user
             self.session.save()
             self.redirect('/admin')
-            return
         except LoginExc as e:
             self.flash(e.msg)
 
         self.render('admin/login.html')
-        return
 
 
 class LogoutHandler(BaseHandler):
@@ -44,5 +42,4 @@ class LogoutHandler(BaseHandler):
         del self.session["user"]
         self.session.save()
         self.redirect(self.get_login_url())
-        return
 

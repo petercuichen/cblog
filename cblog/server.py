@@ -25,14 +25,7 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, **config.WEB)
 
-        # init jiaja2 environment
         self.jinja_env = jinja_environment
-
-        #register filters for jinja2
-        # self.jinja_env.filters.update(filters.register_filters())
-        # self.jinja_env.tests.update({})
-
-        # self.jinja_env.globals['settings'].update(config.WEB)
 
         self.session_store = session.RedisSessionStore(db.redis)
 

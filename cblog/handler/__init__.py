@@ -63,13 +63,14 @@ class BaseHandler(RequestHandler, FlashMessagesMixin):
     def session(self):
         if hasattr(self, '_session'):
             return self._session
-        else:
-            session_id = self.get_secure_cookie('sid')
-            self._session = Session(self.application.session_store, session_id,
-                                    expires_days=1)
-            if not session_id:
-                self.set_secure_cookie('sid', self._session.id, expires_days=1)
-            return self._session
+
+        session_id = self.get_secure_cookie('sid')
+
+        self._session = Session(self.application.session_store, session_id,
+                                expires_days=7)
+        if not session_id:
+            self.set_secure_cookie('sid', self._session.id, expires_days=1)
+        return self._session
 
     def get_current_user(self):
         return self.session['user'] if 'user' in self.session else None
